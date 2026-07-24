@@ -1,0 +1,6 @@
+{
+  "name": "VoltCam Box Simulator",
+  "description": "Simulateur de boîtier connecté VoltCam Standard (BLE GATT, télémétrie temps réel, générateur d'incidents, coupures, sous/surtension et dernier souffle).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
