@@ -25,6 +25,17 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Inject Google Services and Keystore
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          DEBUG_KEYSTORE: ${{ secrets.DEBUG_KEYSTORE }}
+        run: |
+          # Create google-services.json in the app/ directory
+          echo "$GOOGLE_SERVICES_JSON" | base64 -d > app/google-services.json
+          
+          # Create debug.keystore in the project root
+          echo "$DEBUG_KEYSTORE" | base64 -d > debug.keystore
+
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon
 
