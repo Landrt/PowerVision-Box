@@ -30,11 +30,26 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
           DEBUG_KEYSTORE: ${{ secrets.DEBUG_KEYSTORE }}
         run: |
-          # Create google-services.json in the app/ directory
-          echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "ERROR: GOOGLE_SERVICES_JSON secret is empty or not set in GitHub repository settings!"
+            exit 1
+          fi
           
-          # Create debug.keystore in the project root
-          echo "$DEBUG_KEYSTORE" | base64 -d > debug.keystore
+          # Try to determine if the secret is base64 encoded by checking if it contains spaces or quotes (which base64 doesn't have)
+          if echo "$GOOGLE_SERVICES_JSON" | grep -q "{"; then
+            echo "Secret appears to be raw JSON. Saving directly."
+            echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+          else
+            echo "Secret appears to be base64. Decoding."
+            echo "$GOOGLE_SERVICES_JSON" | base64 -d > app/google-services.json
+          fi
+          
+          echo "google-services.json size:"
+          ls -l app/google-services.json
+          
+          if [ -n "$DEBUG_KEYSTORE" ]; then
+            echo "$DEBUG_KEYSTORE" | base64 -d > debug.keystore
+          fi
 
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon
