@@ -31,7 +31,7 @@ jobs:
           DEBUG_KEYSTORE: ${{ secrets.DEBUG_KEYSTORE }}
         run: |
           # Create google-services.json in the app/ directory
-          echo "$GOOGLE_SERVICES_JSON" | base64 -d > app/google-services.json
+          echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
           
           # Create debug.keystore in the project root
           echo "$DEBUG_KEYSTORE" | base64 -d > debug.keystore
